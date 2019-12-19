@@ -37,7 +37,7 @@ import (
 type lineBlocks struct{}
 
 // Enable is a initialized goldmark extension for line blocks support.
-//  md := goldmark.New(goldmark.WithExtensions(EnableLineBlocks))
+//  md := goldmark.New(goldmark.WithExtensions(lineblock.Enable))
 var Enable = new(lineBlocks)
 
 var nbsp = []byte("&nbsp;")
