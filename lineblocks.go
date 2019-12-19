@@ -82,6 +82,6 @@ func findTexts(texts []*ast.Text, node ast.Node) []*ast.Text {
 // Extend implement goldmark.Extender interface.
 func (lb *LineBlocks) Extend(m goldmark.Markdown) {
 	m.Parser().AddOptions(parser.WithASTTransformers(
-		util.Prioritized(new(LineBlocks), 0),
+		util.Prioritized(lb, 0),
 	))
 }
