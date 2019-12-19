@@ -36,9 +36,9 @@ import (
 // A LineBlocks is goldmark extension for inline blocks in markdown.
 type LineBlocks struct{}
 
-// Enable is a initialized goldmark extension for line blocks support.
-//  md := goldmark.New(goldmark.WithExtensions(lineblock.Enable))
-var Enable = new(LineBlocks)
+// Extension is a initialized goldmark extension for line blocks support.
+//  md := goldmark.New(goldmark.WithExtensions(lineblock.Extension))
+var Extension = new(LineBlocks)
 
 var nbsp = []byte("&nbsp;")
 
@@ -85,3 +85,6 @@ func (lb *LineBlocks) Extend(m goldmark.Markdown) {
 		util.Prioritized(lb, 0),
 	))
 }
+
+// Enable is goldmark.Option.
+var Enable = goldmark.WithExtensions(Extension)

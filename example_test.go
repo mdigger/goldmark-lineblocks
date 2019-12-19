@@ -10,7 +10,8 @@ import (
 
 func Example() {
 	var md = goldmark.New(
-		goldmark.WithExtensions(lineblocks.Enable),
+		lineblocks.Enable,
+		// goldmark.WithExtensions(lineblocks.Extension),
 	)
 	var source = []byte(`
 | The limerick packs laughs anatomical

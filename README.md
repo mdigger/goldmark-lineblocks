@@ -6,7 +6,7 @@ This [goldmark](http://github.com/yuin/goldmark) parser extension adds support f
 
 ```go
 var md = goldmark.New(
-    goldmark.WithExtensions(lineblocks.Enable),
+    lineblocks.Enable,
 )
 err := md.Convert(source, os.Stdout)
 if err != nil {
