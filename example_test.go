@@ -10,7 +10,7 @@ import (
 
 func Example() {
 	var md = goldmark.New(
-		lineblocks.Enable,
+		lineblocks.Option,
 		// goldmark.WithExtensions(lineblocks.Extension),
 	)
 	var source = []byte(`

@@ -85,5 +85,5 @@ func (lb *LineBlocks) Extend(m goldmark.Markdown) {
 	))
 }
 
-// Enable is goldmark.Option for line blocks extension.
-var Enable = goldmark.WithExtensions(Extension)
+// Option is goldmark.Option for line blocks extension.
+var Option = goldmark.WithExtensions(Extension)
