@@ -1,5 +1,7 @@
 # goldmark-lineblocks
 
+[![GoDoc](https://godoc.org/github.com/mdigger/goldmark-lineblocks?status.svg)](https://godoc.org/github.com/mdigger/goldmark-lineblocks)
+
 This [goldmark](http://github.com/yuin/goldmark) parser extension adds support for inline blocks in markdown.
 
 ```go
