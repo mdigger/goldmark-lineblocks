@@ -33,17 +33,17 @@ import (
 	"github.com/yuin/goldmark/util"
 )
 
-// A lineBlocks is goldmark extension for inline blocks in markdown.
-type lineBlocks struct{}
+// A LineBlocks is goldmark extension for inline blocks in markdown.
+type LineBlocks struct{}
 
 // Enable is a initialized goldmark extension for line blocks support.
 //  md := goldmark.New(goldmark.WithExtensions(lineblock.Enable))
-var Enable = new(lineBlocks)
+var Enable = new(LineBlocks)
 
 var nbsp = []byte("&nbsp;")
 
 // Transform implement parser.ASTTransformer inerface.
-func (lb *lineBlocks) Transform(node *ast.Document, reader text.Reader, pc parser.Context) {
+func (lb *LineBlocks) Transform(node *ast.Document, reader text.Reader, pc parser.Context) {
 	textNodes := findTexts(make([]*ast.Text, 0, 1000), node)
 	source := reader.Source()
 	for _, textNode := range textNodes {
@@ -80,8 +80,8 @@ func findTexts(texts []*ast.Text, node ast.Node) []*ast.Text {
 }
 
 // Extend implement goldmark.Extender interface.
-func (lb *lineBlocks) Extend(m goldmark.Markdown) {
+func (lb *LineBlocks) Extend(m goldmark.Markdown) {
 	m.Parser().AddOptions(parser.WithASTTransformers(
-		util.Prioritized(new(lineBlocks), 0),
+		util.Prioritized(new(LineBlocks), 0),
 	))
 }
