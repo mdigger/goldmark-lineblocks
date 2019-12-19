@@ -33,7 +33,7 @@ import (
 	"github.com/yuin/goldmark/util"
 )
 
-// A LineBlocks is goldmark extension for inline blocks in markdown.
+// A LineBlocks is goldmark extension for line blocks in markdown.
 type LineBlocks struct{}
 
 // Extension is a initialized goldmark extension for line blocks support.
