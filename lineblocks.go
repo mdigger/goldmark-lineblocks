@@ -37,7 +37,6 @@ import (
 type LineBlocks struct{}
 
 // Extension is a initialized goldmark extension for line blocks support.
-//  md := goldmark.New(goldmark.WithExtensions(lineblock.Extension))
 var Extension = new(LineBlocks)
 
 var nbsp = []byte("&nbsp;")
