@@ -32,5 +32,5 @@ The lines can be hard-wrapped if needed.
     | 200 Main St.
     | Berkeley, CA 94718
 
-This syntax is borrowed from [reStructuredText](http://docutils.sourceforge.net/docs/ref/rst/introduction.html).
+This syntax is borrowed from [reStructuredText](http://docutils.sourceforge.net/docs/ref/rst/introduction.html) and [Pandoc](https://pandoc.org/MANUAL.html#line-blocks).
 
