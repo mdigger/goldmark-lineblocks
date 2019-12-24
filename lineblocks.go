@@ -33,59 +33,60 @@ import (
 	"github.com/yuin/goldmark/util"
 )
 
-// A LineBlocks is goldmark extension for line blocks in markdown.
-type LineBlocks struct{}
+type transformer struct{}
 
-// Extension is a initialized goldmark extension for line blocks support.
-var Extension = new(LineBlocks)
+var defaultTransformer = new(transformer)
+
+// NewTransformer return inline blocks transformer.
+func NewTransformer() parser.ASTTransformer {
+	return defaultTransformer
+}
 
 var nbsp = []byte("&nbsp;")
 
 // Transform implement parser.ASTTransformer inerface.
-func (lb *LineBlocks) Transform(node *ast.Document, reader text.Reader, pc parser.Context) {
+func (lb *transformer) Transform(node *ast.Document, reader text.Reader, pc parser.Context) {
 	var source = reader.Source()
-	walkToTextNode(node, func(node ast.Node) {
-		text := node.Text(source)
+	ast.Walk(node, func(node ast.Node, entering bool) (ast.WalkStatus, error) {
+		if !entering || node.Kind() != ast.KindText {
+			return ast.WalkContinue, nil
+		}
+		var text = node.Text(source)
 		// check line block start marker
 		if len(text) < 1 || text[0] != '|' {
-			return
+			return ast.WalkSkipChildren, nil
 		}
 		// add line break
 		if prev, ok := node.PreviousSibling().(*ast.Text); ok {
 			if !prev.SoftLineBreak() {
-				return // not line start
+				return ast.WalkSkipChildren, nil // not line start
 			}
 			prev.SetHardLineBreak(true)
 		}
 		// add spaces prefix
-		spaces := util.TrimLeftSpaceLength(text[1:])
+		var spaces = util.TrimLeftSpaceLength(text[1:])
 		if spaces > 2 {
 			node.Parent().InsertBefore(node.Parent(), node,
 				ast.NewString(bytes.Repeat(nbsp, spaces-1)))
 		}
 		// remove line block prefix and spaces
 		node.(*ast.Text).Segment.Start += spaces + 1
+		return ast.WalkSkipChildren, nil
 	})
 }
 
-func walkToTextNode(node ast.Node, f func(node ast.Node)) {
-	for node = node.FirstChild(); node != nil; node = node.NextSibling() {
-		if node.Kind() == ast.KindText {
-			f(node)
-			continue
-		}
-		if node.HasChildren() {
-			walkToTextNode(node, f)
-		}
-	}
-}
+// A extension is goldmark extension for line extension in markdown.
+type extension struct{}
 
 // Extend implement goldmark.Extender interface.
-func (lb *LineBlocks) Extend(m goldmark.Markdown) {
+func (lb *extension) Extend(m goldmark.Markdown) {
 	m.Parser().AddOptions(parser.WithASTTransformers(
-		util.Prioritized(lb, 500),
+		util.Prioritized(defaultTransformer, 500),
 	))
 }
+
+// Extension is a initialized goldmark extension for line blocks support.
+var Extension goldmark.Extender = new(extension)
 
 // Enable is goldmark.Enable for line blocks extension.
 var Enable = goldmark.WithExtensions(Extension)
