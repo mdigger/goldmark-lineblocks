@@ -43,47 +43,49 @@ var nbsp = []byte("&nbsp;")
 
 // Transform implement parser.ASTTransformer inerface.
 func (lb *LineBlocks) Transform(node *ast.Document, reader text.Reader, pc parser.Context) {
-	textNodes := findTexts(make([]*ast.Text, 0, 1000), node)
-	source := reader.Source()
-	for _, textNode := range textNodes {
-		text := textNode.Text(source)
+	var source = reader.Source()
+	walkToTextNode(node, func(node ast.Node) {
+		text := node.Text(source)
+		// check line block start marker
 		if len(text) < 1 || text[0] != '|' {
-			continue
+			return
 		}
 		// add line break
-		if prev, ok := textNode.PreviousSibling().(*ast.Text); ok {
+		if prev, ok := node.PreviousSibling().(*ast.Text); ok {
 			if !prev.SoftLineBreak() {
-				continue
+				return // not line start
 			}
 			prev.SetHardLineBreak(true)
 		}
 		// add spaces prefix
-		spacesLength := util.TrimLeftSpaceLength(text[1:])
-		if spacesLength > 2 {
-			textNode.Parent().InsertBefore(textNode.Parent(), textNode,
-				ast.NewString(bytes.Repeat(nbsp, spacesLength-1)))
+		spaces := util.TrimLeftSpaceLength(text[1:])
+		if spaces > 2 {
+			node.Parent().InsertBefore(node.Parent(), node,
+				ast.NewString(bytes.Repeat(nbsp, spaces-1)))
 		}
-		textNode.Segment.Start += spacesLength + 1
-		// textNode.Dump(source, 0)
-	}
+		// remove line block prefix and spaces
+		node.(*ast.Text).Segment.Start += spaces + 1
+	})
 }
 
-func findTexts(texts []*ast.Text, node ast.Node) []*ast.Text {
-	for n := node.FirstChild(); n != nil; n = n.NextSibling() {
-		if n.Kind() == ast.KindText && !n.IsRaw() {
-			texts = append(texts, n.(*ast.Text))
+func walkToTextNode(node ast.Node, f func(node ast.Node)) {
+	for node = node.FirstChild(); node != nil; node = node.NextSibling() {
+		if node.Kind() == ast.KindText {
+			f(node)
+			continue
 		}
-		texts = findTexts(texts, n)
+		if node.HasChildren() {
+			walkToTextNode(node, f)
+		}
 	}
-	return texts
 }
 
 // Extend implement goldmark.Extender interface.
 func (lb *LineBlocks) Extend(m goldmark.Markdown) {
 	m.Parser().AddOptions(parser.WithASTTransformers(
-		util.Prioritized(lb, 0),
+		util.Prioritized(lb, 500),
 	))
 }
 
-// Option is goldmark.Option for line blocks extension.
-var Option = goldmark.WithExtensions(Extension)
+// Enable is goldmark.Enable for line blocks extension.
+var Enable = goldmark.WithExtensions(Extension)
