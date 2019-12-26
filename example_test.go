@@ -26,7 +26,7 @@ func Example() {
 	// Output:
 	// <p>The limerick packs laughs anatomical<br>
 	// In space that is quite economical.<br>
-	//    But the good ones I've seen<br>
-	//    So seldom are clean<br>
+	// &nbsp;&nbsp;&nbsp;But the good ones I've seen<br>
+	// &nbsp;&nbsp;&nbsp;So seldom are clean<br>
 	// And the clean ones so seldom are comical</p>
 }

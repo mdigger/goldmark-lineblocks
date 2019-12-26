@@ -66,8 +66,9 @@ func (lb *transformer) Transform(node *ast.Document, reader text.Reader, pc pars
 		// add spaces prefix
 		var spaces = util.TrimLeftSpaceLength(text[1:])
 		if spaces > 2 {
-			node.Parent().InsertBefore(node.Parent(), node,
-				ast.NewString(bytes.Repeat(nbsp, spaces-1)))
+			indent := ast.NewString(bytes.Repeat(nbsp, spaces-1))
+			indent.SetCode(true)
+			node.Parent().InsertBefore(node.Parent(), node, indent)
 		}
 		// remove line block prefix and spaces
 		node.(*ast.Text).Segment.Start += spaces + 1
