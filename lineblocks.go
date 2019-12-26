@@ -37,10 +37,10 @@ type transformer struct{}
 
 var defaultTransformer = new(transformer)
 
-// NewTransformer return inline blocks transformer.
-func NewTransformer() parser.ASTTransformer {
-	return defaultTransformer
-}
+// // NewTransformer return inline blocks transformer.
+// func NewTransformer() parser.ASTTransformer {
+// 	return defaultTransformer
+// }
 
 var nbsp = []byte("&nbsp;")
 
