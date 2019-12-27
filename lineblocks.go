@@ -36,7 +36,7 @@ import (
 
 type transformer struct{}
 
-var defaultTransformer = new(transformer)
+var defaultTransformer parser.ASTTransformer = new(transformer)
 
 // // NewTransformer return inline blocks transformer.
 // func NewTransformer() parser.ASTTransformer {
