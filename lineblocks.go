@@ -35,27 +35,22 @@ import (
 
 type transformer struct{}
 
-var defaultTransformer parser.ASTTransformer = new(transformer)
-
-// // NewTransformer return inline blocks transformer.
-// func NewTransformer() parser.ASTTransformer {
-// 	return defaultTransformer
-// }
-
 var nbsp = []byte("&nbsp;")
 
-// Transform implement parser.ASTTransformer inerface.
+// Transform implement parser.ASTTransformer interface.
 func (lb *transformer) Transform(node *ast.Document, reader text.Reader, pc parser.Context) {
-	var source = reader.Source()
-	ast.Walk(node, func(node ast.Node, entering bool) (ast.WalkStatus, error) {
+	source := reader.Source()
+	_ = ast.Walk(node, func(node ast.Node, entering bool) (ast.WalkStatus, error) {
 		if !entering || node.Kind() != ast.KindText {
 			return ast.WalkContinue, nil
 		}
-		var text = node.Text(source)
+
+		text := node.Text(source)
 		// check line block start marker
 		if len(text) < 1 || text[0] != '|' {
 			return ast.WalkSkipChildren, nil
 		}
+
 		// add line break
 		if prev, ok := node.PreviousSibling().(*ast.Text); ok {
 			if !prev.SoftLineBreak() {
@@ -63,13 +58,15 @@ func (lb *transformer) Transform(node *ast.Document, reader text.Reader, pc pars
 			}
 			prev.SetHardLineBreak(true)
 		}
+
 		// add spaces prefix
-		var spaces = util.TrimLeftSpaceLength(text[1:])
+		spaces := util.TrimLeftSpaceLength(text[1:])
 		if spaces > 2 {
 			indent := ast.NewString(bytes.Repeat(nbsp, spaces-1))
 			indent.SetCode(true)
 			node.Parent().InsertBefore(node.Parent(), node, indent)
 		}
+
 		// remove line block prefix and spaces
 		node.(*ast.Text).Segment.Start += spaces + 1
 		return ast.WalkSkipChildren, nil
@@ -78,6 +75,8 @@ func (lb *transformer) Transform(node *ast.Document, reader text.Reader, pc pars
 
 // A extension is goldmark extension for line extension in markdown.
 type extension struct{}
+
+var defaultTransformer parser.ASTTransformer = new(transformer)
 
 // Extend implement goldmark.Extender interface.
 func (lb *extension) Extend(m goldmark.Markdown) {
