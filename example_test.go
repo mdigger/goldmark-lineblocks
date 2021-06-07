@@ -24,9 +24,11 @@ func Example() {
 		log.Fatal(err)
 	}
 	// Output:
-	// <p>The limerick packs laughs anatomical<br>
-	// In space that is quite economical.<br>
-	// &nbsp;&nbsp;&nbsp;But the good ones I've seen<br>
-	// &nbsp;&nbsp;&nbsp;So seldom are clean<br>
-	// And the clean ones so seldom are comical</p>
+	// <div class="line-block">
+	// <div class="line">The limerick packs laughs anatomical</div>
+	// <div class="line">In space that is quite economical.</div>
+	// <div class="line">&nbsp;&nbsp;&nbsp;But the good ones I've seen</div>
+	// <div class="line">&nbsp;&nbsp;&nbsp;So seldom are clean</div>
+	// <div class="line">And the clean ones so seldom are comical</div>
+	// </div>
 }
