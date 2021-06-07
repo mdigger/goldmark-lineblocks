@@ -23,5 +23,5 @@ func (lb *defaultExtension) Extend(m goldmark.Markdown) {
 // Extension is a initialized goldmark extension for line blocks support.
 var Extension goldmark.Extender = new(defaultExtension)
 
-// Enable is goldmark.Enable for line blocks extension.
+// Enable is goldmark.Option for line blocks extension.
 var Enable = goldmark.WithExtensions(Extension)
